@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+
+{% block title %}Sepet{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2>Sepetiniz</h2>
+  {% if cart_items %}
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Ürün</th>
+        <th>Adet</th>
+        <th>Birim Fiyat</th>
+        <th>Toplam</th>
+        <th>İşlemler</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in cart_items %}
+      <tr>
+        <td>{{ item.product.name }}</td>
+        <td>
+          <form action="{% url 'store:update_cart' item.product.id %}" method="post" class="d-inline-flex align-items-center">
+            {% csrf_token %}
+            <input type="number" name="quantity" value="{{ item.quantity }}" min="1" class="form-control form-control-sm me-2" style="width:70px;">
+            <button type="submit" class="btn btn-sm btn-primary">Güncelle</button>
+          </form>
+        </td>
+        <td>{{ item.product.price }} ₺</td>
+        <td>{{ item.subtotal }} ₺</td>
+        <td>
+          <a href="{% url 'store:remove_from_cart' item.product.id %}" class="btn btn-sm btn-danger">Kaldır</a>
+        </td>
+        <td> <form action="{% url 'store:checkout' %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-success">Satın Al</button>
+            </form>
+        </td>
+
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <h4>Genel Toplam: {{ total_price }} ₺</h4>
+  <a href="{% url 'store:product_list' %}" class="btn btn-secondary">Alışverişe Devam Et</a>
+  <br>
+        
+           
+            {% else %}
+        <p>Sepetiniz boş.</p>
+        <a href="{% url 'store:product_list' %}" class="btn btn-primary">Alışverişe Başla</a>
+        {% endif %}
+        
+</div>
+{% endblock %}
+{% if messages %}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    {% for message in messages %}
+      Swal.fire({
+        icon: '{% if message.tags == "error" %}error{% elif message.tags == "success" %}success{% else %}info{% endif %}',
+        title: '{{ message }}',
+        timer: 3000,
+        timerProgressBar: true,
+        showConfirmButton: false
+      });
+    {% endfor %}
+  });
+</script>
+{% endif %}

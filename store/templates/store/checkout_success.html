@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block content %}
+  <div class="container mt-4">
+    <h2>Sipariş Başarılı!</h2>
+    <p>Sipariş numaranız: {{ order.id }}</p>
+    <p>Toplam fiyat: {{ order.total_price }} ₺</p>
+    <a href="{% url 'store:product_list' %}" class="btn btn-primary">Alışverişe Devam Et</a>
+  </div>
+{% endblock %}

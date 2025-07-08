@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}{{ product.name }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-md-6">
+      {% if product.image %}
+      <img src="{{ product.image.url }}" class="img-fluid" alt="{{ product.name }}">
+      {% else %}
+      <img src="https://via.placeholder.com/600x600" class="img-fluid" alt="No Image">
+      {% endif %}
+    </div>
+    <div class="col-md-6">
+      <h2>{{ product.name }}</h2>
+      <p>{{ product.description }}</p>
+      <p><strong>Fiyat:</strong> {{ product.price }} ₺</p>
+      <p><strong>Beden:</strong> {{ product.get_size_display }}</p>
+      <p><strong>Stok:</strong> {{ product.stock }}</p>
+      <p><strong>Kategori:</strong> {{ product.category.name }}</p>
+      <a href="{% url 'store:product_list' %}" class="btn btn-secondary">Geri Dön</a>
+<form method="post" action="{% url 'store:add_to_cart' product.id %}">
+  {% csrf_token %}
+  <button type="submit" class="btn btn-success">Sepete Ekle</button>
+</form>
+    </div>
+  </div>
+</div>
+{% endblock %}
